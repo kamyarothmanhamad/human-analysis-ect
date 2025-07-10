@@ -44,7 +44,7 @@ class HumanPointCloudDataset(Dataset):
         
         # Only load dataset names and metadata, not the actual data
         with h5py.File(vertices_hdf5_path, 'r') as vertices_file, h5py.File(labels_hdf5_path, 'r') as labels_file:
-            # Get all dataset names from vertices file
+            # Get all dataset names from vertices file and labels file
             vertices_dataset_names = list(vertices_file.keys())
             labels_dataset_names = list(labels_file.keys())
             
@@ -116,10 +116,14 @@ class HumanPointCloudDataset(Dataset):
         
         # Normalize coordinates if specified
         if self.normalize:
-            # Center and scale to [-1, 1]
-            vertices_min = vertices.min(axis=0)
-            vertices_max = vertices.max(axis=0)
-            vertices = 2 * (vertices - vertices_min) / (vertices_max - vertices_min) - 1
+            # Center by subtracting mean
+            center = vertices.mean(axis=0)
+            vertices = vertices - center
+            
+            # Scale to unit norm (unit sphere)
+            max_norm = np.sqrt((vertices**2).sum(axis=1).max())
+            if max_norm > 0:
+                vertices = vertices / max_norm
         
         # Convert to PyTorch tensors
         vertices_tensor = torch.from_numpy(vertices)
@@ -291,7 +295,7 @@ if __name__ == "__main__":
     # print(f"Number of classes: {dataset.get_num_classes()}")
     
     # Run ECT pipeline
-    run_ect_pipeline(dataset)
+    # run_ect_pipeline(dataset)
     
     # # Visualize a sample if available
     # if len(dataset) > 0:

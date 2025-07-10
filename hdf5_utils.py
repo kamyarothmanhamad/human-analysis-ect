@@ -1,4 +1,3 @@
-
 """
 HDF5 Utility Module - Collection of functions for working with HDF5 files
 """

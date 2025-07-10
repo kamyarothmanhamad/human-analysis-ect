@@ -516,49 +516,49 @@ def main():
             collate_fn=collate_fn
         )
         
-        # Create model
-        model = ECTSegmentationModel(
-            num_classes=num_classes,
-            num_thetas=num_thetas,
-            resolution=resolution,
-            radius=radius,
-            fixed_directions=False,  # Use learnable directions
-            device=DEVICE
-        ).to(DEVICE)
+        # # Create model
+        # model = ECTSegmentationModel(
+        #     num_classes=num_classes,
+        #     num_thetas=num_thetas,
+        #     resolution=resolution,
+        #     radius=radius,
+        #     fixed_directions=False,  # Use learnable directions
+        #     device=DEVICE
+        # ).to(DEVICE)
         
-        # Define loss function and optimizer
-        criterion = nn.CrossEntropyLoss()
-        optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
+        # # Define loss function and optimizer
+        # criterion = nn.CrossEntropyLoss()
+        # optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
         
-        # Train the model
-        print("\nTraining model...")
-        train_model(
-            model, 
-            train_loader, 
-            test_loader,  # Using test set as validation for simplicity
-            criterion, 
-            optimizer, 
-            num_epochs=num_epochs,
-            device=DEVICE
-        )
+        # # Train the model
+        # print("\nTraining model...")
+        # train_model(
+        #     model, 
+        #     train_loader, 
+        #     test_loader,  # Using test set as validation for simplicity
+        #     criterion, 
+        #     optimizer, 
+        #     num_epochs=num_epochs,
+        #     device=DEVICE
+        # )
         
-        # Evaluate the model
-        print("\nEvaluating model...")
-        test_loss, test_acc, all_preds, all_labels = evaluate_model(
-            model, 
-            test_loader, 
-            criterion,
-            device=DEVICE
-        )
+        # # Evaluate the model
+        # print("\nEvaluating model...")
+        # test_loss, test_acc, all_preds, all_labels = evaluate_model(
+        #     model, 
+        #     test_loader, 
+        #     criterion,
+        #     device=DEVICE
+        # )
         
-        # Visualize results on a few test samples
-        print("\nVisualizing segmentation results...")
-        visualize_segmentation_results(
-            model, 
-            dataset, 
-            indices=[0, 1, 2],  # Visualize first three test samples
-            device=DEVICE
-        )
+        # # Visualize results on a few test samples
+        # print("\nVisualizing segmentation results...")
+        # visualize_segmentation_results(
+        #     model, 
+        #     dataset, 
+        #     indices=[0, 1, 2],  # Visualize first three test samples
+        #     device=DEVICE
+        # )
         
     except FileNotFoundError:
         print(f"Error: HDF5 file not found at {hdf5_path}")
