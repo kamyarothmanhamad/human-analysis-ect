@@ -165,6 +165,7 @@ class HumanPointCloudDataset(Dataset):
         
         # Get the sample
         data = self[idx]
+        vertices = data.x.numpy()
         labels = data.y.numpy()
         
         # Reset the mode
@@ -174,6 +175,7 @@ class HumanPointCloudDataset(Dataset):
         unique_labels = np.unique(labels)
         
         print(f"Available labels in the {'Training' if train else 'Test'} sample {idx}:")
+        print(f'Total number of vertices: {len(vertices)}')
         print(f"Total number of unique labels: {len(unique_labels)}")
         print(f"Labels: {unique_labels.tolist()}")
         
