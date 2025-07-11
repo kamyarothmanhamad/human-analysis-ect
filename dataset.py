@@ -130,6 +130,55 @@ class HumanPointCloudDataset(Dataset):
         
         all_labels = np.concatenate(all_labels)
         return len(np.unique(all_labels))
+    
+    def get_dataset_labels(self):
+        """Get and print the list of unique labels available in the dataset"""
+        all_labels = []
+        
+        # Load all samples to get unique labels
+        for dataset_name in self.dataset_names:
+            sample = self._load_sample(dataset_name)
+            all_labels.append(sample['labels'])
+        
+        all_labels = np.concatenate(all_labels)
+        unique_labels = np.unique(all_labels)
+        
+        print("Available labels in the dataset:")
+        print(f"Total number of unique labels: {len(unique_labels)}")
+        print(f"Labels: {unique_labels.tolist()}")
+        
+        return unique_labels
+
+    def get_sample_labels(self, idx, train=True):
+        """Get and print the list of unique labels available in a specific sample
+        
+        Args:
+            idx: Index of the sample
+            train: Whether to use the training or test set
+            
+        Returns:
+            numpy.ndarray: Array of unique labels in the sample
+        """
+        # Set the correct mode
+        orig_mode = self.is_train
+        self.set_mode(train)
+        
+        # Get the sample
+        data = self[idx]
+        labels = data.y.numpy()
+        
+        # Reset the mode
+        self.set_mode(orig_mode)
+        
+        # Find unique labels
+        unique_labels = np.unique(labels)
+        
+        print(f"Available labels in the {'Training' if train else 'Test'} sample {idx}:")
+        print(f"Total number of unique labels: {len(unique_labels)}")
+        print(f"Labels: {unique_labels.tolist()}")
+        
+        return unique_labels
+
 
     def visualize_sample(self, idx, train=True, with_normals=False, with_default_view=True):
         """Visualize a sample from the dataset using Open3D"""
@@ -147,8 +196,6 @@ class HumanPointCloudDataset(Dataset):
         
         # Use Open3D visualization
         print(f"Visualizing {'Training' if train else 'Test'} Sample {idx}")
-        print(f"Points: {len(vertices)}, Unique labels: {len(np.unique(labels))}")
-        
         display_part_pc(vertices, labels, with_normals=with_normals, with_default_view=with_default_view)
 
 
