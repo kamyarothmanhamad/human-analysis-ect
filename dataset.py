@@ -149,15 +149,15 @@ class HumanPointCloudDataset(Dataset):
         
         return unique_labels
 
-    def get_sample_labels(self, idx, train=True):
-        """Get and print the list of unique labels available in a specific sample
+    def get_sample_v_l(self, idx, train=True, is_numpy=False):
+        """Get and print the list of unique labels and number of points available in a specific sample
         
         Args:
             idx: Index of the sample
             train: Whether to use the training or test set
             
         Returns:
-            numpy.ndarray: Array of unique labels in the sample
+            torch.Tensor: Tensor of unique labels in the sample
         """
         # Set the correct mode
         orig_mode = self.is_train
@@ -165,21 +165,26 @@ class HumanPointCloudDataset(Dataset):
         
         # Get the sample
         data = self[idx]
-        vertices = data.x.numpy()
-        labels = data.y.numpy()
+        vertices = data.x
+        labels = data.y
         
         # Reset the mode
         self.set_mode(orig_mode)
         
         # Find unique labels
-        unique_labels = np.unique(labels)
+        unique_labels = torch.unique(labels)
         
         print(f"Available labels in the {'Training' if train else 'Test'} sample {idx}:")
         print(f'Total number of vertices: {len(vertices)}')
         print(f"Total number of unique labels: {len(unique_labels)}")
         print(f"Labels: {unique_labels.tolist()}")
+
+        if is_numpy:
+            # Convert to numpy if requested
+            unique_labels = unique_labels.numpy()
         
         return unique_labels
+    
 
 
     def visualize_sample(self, idx, train=True, with_normals=False, with_default_view=True):
