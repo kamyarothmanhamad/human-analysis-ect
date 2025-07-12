@@ -238,7 +238,7 @@ def visualize_ect_features(ect_features, title="ECT Features", save_path=None, s
     
     # 1. Main ECT heatmap
     ax1 = fig.add_subplot(gs[0])
-    im = ax1.imshow(ect_np.T, cmap='viridis', aspect='auto', origin='lower')
+    im = ax1.imshow(ect_np, cmap='viridis', aspect='auto', origin='lower')
     ax1.set_title(f'{title} - Heatmap')
     ax1.set_xlabel('Direction Index')
     ax1.set_ylabel('Filtration Level')
